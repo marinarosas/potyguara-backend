@@ -1,0 +1,15 @@
+version: '3.8'
+
+service: 
+  postgres:
+    container_name: potyguara-verse-pg
+    mage: postgres
+    ports:
+      -5432:5432
+    enviroment:
+      POSTGRES_USER: potyguara
+      POSTGRES_PASSWORD: 6gts7Hjgsfy0
+      POSTGRES_DB: potyguara-verse
+      PGDATA: /data/postgres
+    volumes:
+      - ./data/pg:/data/postgres
