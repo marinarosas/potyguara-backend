@@ -1,36 +1,66 @@
-import { Controller, Post } from '@nestjs/common'
-import { PrismaService } from 'src/prisma/prisma.service'
+import {
+  Body,
+  ConflictException,
+  Controller,
+  HttpCode,
+  Post,
+  UsePipes,
+} from "@nestjs/common";
+import { PrismaService } from "src/prisma/prisma.service";
+import { hash } from "bcryptjs";
+import { z } from "zod";
+import { ZodValidationPipe } from "src/pipes/zod-validation-pipe";
 
-@Controller('/accounts')
+const createAccountBodySchema = z.object({
+  name: z.string(),
+  username: z.string(),
+  email: z.string().email(),
+  password: z.string(),
+});
+
+type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>
+
+@Controller("/sing-up")
 export class CreateAccountController {
   constructor(private prisma: PrismaService) {}
 
   @Post()
-  async handle() {
-    const name = 'John Doe'
-    const email = 'johndoe@gmail.com'
-    const password = '123456'
-    const avatarURL = 'http//www.google.com.br'
-    const cpf = '999.999.999-99'
-    const birthday = '01/01/2004'
-    const celphone = '(84)99999-9999'
-    const artisticName = 'Doe J'
-    const instagramLink = 'http://www.instagram.com'
-    const facebookLink = 'http://www.instagram.com'
+  @HttpCode(201)
+  @UsePipes(new ZodValidationPipe(createAccountBodySchema))
+  async handle(@Body() body: CreateAccountBodySchema) {
+    const { name, username, email, password } = body
+
+    const userWithSameEmail = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (userWithSameEmail) {
+      throw new ConflictException(
+        "User with same e-mail address already exists."
+      );
+    }
+
+    const userWithSameUsername = await this.prisma.user.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    if (userWithSameUsername) {
+      throw new ConflictException("User with same username already exists.");
+    }
+
+    const hashedPassword = await hash(password, 8);
 
     await this.prisma.user.create({
       data: {
         name,
+        username,
         email,
-        password,
-        avatarURL,
-        cpf,
-        birthday,
-        celphone,
-        artisticName,
-        instagramLink,
-        facebookLink,
+        password: hashedPassword,
       },
-    })
+    });
   }
 }

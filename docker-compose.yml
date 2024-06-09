@@ -1,15 +1,15 @@
 version: '3.8'
 
-service: 
+services:
   postgres:
-    container_name: potyguara-verse-pg
+    container_name: potyguara
     image: postgres
     ports:
-      -5432:5432
-    enviroment:
+      - 5432:5432
+    environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 6gts7Hjgsfy0
-      POSTGRES_DB: poty
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: potyguara
       PGDATA: /data/postgres
     volumes:
       - ./data/pg:/data/postgres

@@ -1,0 +1,54 @@
+@baseUrl = http://localhost:3333
+@authToken = {{authenticate.response.body.access_token}}
+
+# @name create_account
+POST {{baseUrl}}/sing-up
+Content-Type: application/json
+
+{
+    "name": "Marina",
+    "username": "marinoca23",
+    "email": "marina23@email.com",
+    "password": "123456" 
+}
+
+###
+
+# @name authenticate
+POST {{baseUrl}}/sing-in
+Content-Type: application/json
+
+{
+    "email": "marina23@email.com",
+    "password": "123456" 
+}
+
+###
+
+# @name create_event
+POST {{baseUrl}}/events
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "title": "Nova Evento 2",
+    "content": "Conteúdo do evento",
+    "price": 30,
+    "eventDate": "2023-12-31T23:59:59Z" ,
+    "eventTime": "2023-12-31T23:59:59Z",
+    "statusPayment": false
+}
+
+###
+
+# @name fetch_recent_events
+GET {{baseUrl}}/events?page=2
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name dashboard
+GET {{baseUrl}}/dashboard
+Content-Type: application/json
+Authorization: Bearer {{authToken}}

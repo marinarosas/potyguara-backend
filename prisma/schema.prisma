@@ -1,6 +1,9 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,54 +13,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  ARTIST
+  VIEWER
+}
+
 model User {
-  id String @id @default(uuid())
+  id       String @id @default(uuid())
+  name     String
+  username String @unique
+  email    String @unique
+  password String
+  role     Role   @default(VIEWER)
 
-  name      String
-  email     String  @unique
-  password  String
-  avatarURL String?
-  cpf String
-  birthday DateTime
-  celphone String
-  artisticName String @map("artistic_name")
-  instagramLink String @map("instagram_link")
-  facebookLink String @map("facebook_link")
-
-  isDisabled Boolean @default(false)
-  isAdmin    Boolean @default(false)
-  isProducer Boolean @default(false)
-
-  tokenNotification String?
-
-  events     Event[]
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
+  events Event[]
 
   @@map("users")
 }
 
 model Event {
-  id String @id @default(uuid())
-
-  event_name        String
-  event_date        DateTime
-  event_city        String
-  event_state       String
-  event_time        DateTime
-  event_duration    String
-  event_description String
-  price             Float
-  authorId String @map("author_id")
-
-  event_tickets_avaible Boolean
+  id            String    @id @default(uuid())
+  title         String
+  slug          String    @unique
+  content       String
+  price         Float
+  statusPayment Boolean   @map("status_payment")
+  eventDate     DateTime  @default(now()) @map("event_date")
+  eventTime     String    @map("event_time")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime? @default(now()) @map("updated_at")
+  authorId      String    @map("author_id")
 
   author User @relation(fields: [authorId], references: [id])
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
-
   @@map("events")
 }
-
