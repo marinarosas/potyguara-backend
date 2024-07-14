@@ -48,13 +48,6 @@ Authorization: Bearer {{authToken}}
 
 ###
 
-# @name dashboard
-GET {{baseUrl}}/app/dashboard
-Content-Type: application/json
-Authorization: Bearer {{authToken}}
-
-###
-
 # @name user_profile
 GET {{baseUrl}}/users/me
 Content-Type: application/json

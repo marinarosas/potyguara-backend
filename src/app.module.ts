@@ -7,7 +7,6 @@ import { AuthModule } from "./auth/auth.module";
 import { AuthenticateController } from "./controllers/authenticate.controller";
 import { CreateEventController } from "./controllers/create-events.controller";
 import { FetchRecentEventsController } from "./controllers/fetch-recent-events.controller";
-import { DashboardController } from "./controllers/dashboard.controlle";
 import { ProfileController } from "./controllers/user-profile.controller";
 
 @Module({
@@ -23,7 +22,6 @@ import { ProfileController } from "./controllers/user-profile.controller";
     AuthenticateController,
     CreateEventController,
     FetchRecentEventsController,
-    DashboardController,
     ProfileController
   ],
   providers: [PrismaService],
