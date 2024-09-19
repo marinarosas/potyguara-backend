@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3333
-@authToken = {{authenticate.response.body.access_token}}
+@authToken = {{authenticate.response.body.token}}
 
 # @name create_account
 POST {{baseUrl}}/sing-up
@@ -7,8 +7,8 @@ Content-Type: application/json
 
 {
     "name": "Marina",
-    "username": "marinoca23",
-    "email": "marina23@email.com",
+    "username": "marinoca88",
+    "email": "marina88@email.com",
     "password": "123456" 
 }
 
@@ -19,7 +19,7 @@ POST {{baseUrl}}/sing-in
 Content-Type: application/json
 
 {
-    "email": "marina23@email.com",
+    "email": "marina@email.com",
     "password": "123456" 
 }
 
@@ -31,18 +31,19 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "Nova Evento 2",
+    "title": "Nova Evento 01",
     "content": "Conteúdo do evento",
     "price": 30,
-    "eventDate": "2023-12-31T23:59:59Z" ,
+    "eventDate": "2024-07-21T01:54:01.681Z",
     "eventTime": "2023-12-31T23:59:59Z",
+    "attachments": [],
     "statusPayment": false
 }
 
 ###
 
 # @name fetch_recent_events
-GET {{baseUrl}}/events?page=2
+GET {{baseUrl}}/events?page=1
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 

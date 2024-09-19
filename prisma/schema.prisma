@@ -39,13 +39,25 @@ model Event {
   content       String
   price         Float
   statusPayment Boolean   @map("status_payment")
-  eventDate     DateTime  @default(now()) @map("event_date")
+  eventDate     String    @map("event_date")
   eventTime     String    @map("event_time")
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime? @default(now()) @map("updated_at")
   authorId      String    @map("author_id")
 
-  author User @relation(fields: [authorId], references: [id])
+  author      User         @relation(fields: [authorId], references: [id])
+  attachments Attachment[]
 
   @@map("events")
+}
+
+model Attachment {
+  id      String  @id @default(uuid())
+  title   String
+  url     String
+  eventId String? @map("event_id")
+
+  event Event? @relation(fields: [eventId], references: [id])
+
+  @@map("attachments")
 }
