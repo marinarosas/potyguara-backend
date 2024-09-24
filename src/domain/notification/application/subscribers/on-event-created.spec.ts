@@ -1,7 +1,5 @@
-import {  OnEventCreated } from "./on-event-created";
-import {
-  InMemoryEventsRepository,
-} from "test/repositories/in-memory-event-repository";
+import { OnEventCreated } from "./on-event-created";
+import { InMemoryEventsRepository } from "test/repositories/in-memory-event-repository";
 import {
   SendNotificationUseCase,
   SendNotificationUseCaseRequest,
@@ -11,7 +9,13 @@ import { InMemoryNotificationsRepository } from "test/repositories/in-memory-not
 import { vi, SpyInstance } from "vitest";
 import { waitFor } from "test/util/wait-for";
 import { makeEvent } from "test/factories/make-event";
+import { InMemoryArtistsRepository } from "test/repositories/in-memory-artists-repository";
+import { InMemoryEventAttachmentsRepository } from "test/repositories/in-memory-event-attachments-repository";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 
+let inMemoryEventAttachmentsRepository: InMemoryEventAttachmentsRepository;
+let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
+let inMemoryArtistsRepository: InMemoryArtistsRepository;
 let inMemoryEventsRepository: InMemoryEventsRepository;
 let inMemoryNotificationRepository: InMemoryNotificationsRepository;
 let sendNotificationUseCase: SendNotificationUseCase;
@@ -23,7 +27,15 @@ let sendNotificationExecuteSpy: SpyInstance<
 
 describe("On Event Created", () => {
   beforeEach(() => {
-    inMemoryEventsRepository = new InMemoryEventsRepository();
+    inMemoryEventAttachmentsRepository =
+      new InMemoryEventAttachmentsRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemoryArtistsRepository = new InMemoryArtistsRepository();
+    inMemoryEventsRepository = new InMemoryEventsRepository(
+      inMemoryEventAttachmentsRepository,
+      inMemoryAttachmentsRepository,
+      inMemoryArtistsRepository
+    );
     inMemoryNotificationRepository = new InMemoryNotificationsRepository();
     sendNotificationUseCase = new SendNotificationUseCase(
       inMemoryNotificationRepository
@@ -33,7 +45,7 @@ describe("On Event Created", () => {
 
     new OnEventCreated(inMemoryEventsRepository, sendNotificationUseCase);
   });
-  
+
   it("should send a notification when an event is created", async () => {
     const event = makeEvent();
 

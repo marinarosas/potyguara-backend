@@ -1,6 +1,6 @@
 import { BadRequestException, Controller, Get, Param } from "@nestjs/common";
-import { EventPresenter } from "../presenters/event-presenter";
 import { GetEventBySlugUseCase } from "@/domain/forum/application/use-cases/get-event-by-slug";
+import { EventDetailsPresenter } from "../presenters/event-details-presenter";
 
 @Controller("/events/:slug")
 export class GetEventBySlugController {
@@ -16,6 +16,6 @@ export class GetEventBySlugController {
       throw new BadRequestException();
     }
 
-    return { event: EventPresenter.toHTTP(result.value.event) };
+    return { event: EventDetailsPresenter.toHTTP(result.value.event) };
   }
 }

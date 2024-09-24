@@ -5,15 +5,26 @@ import { DeleteEventUseCase } from "./delete-event";
 import { makeEvent } from "test/factories/make-event";
 import { InMemoryEventAttachmentsRepository } from "test/repositories/in-memory-event-attachments-repository";
 import { makeEventAttachment } from "test/factories/make-event-attachment";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
+import { InMemoryArtistsRepository } from "test/repositories/in-memory-artists-repository";
 
 let inMemoryEventAttachmentsRepository: InMemoryEventAttachmentsRepository;
+let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
+let inMemoryArtistsRepository: InMemoryArtistsRepository;
 let inMemoryEventsRepository: InMemoryEventsRepository;
 let sut: DeleteEventUseCase;
 
 describe("Delete Event", () => {
   beforeEach(() => {
-    inMemoryEventAttachmentsRepository = new InMemoryEventAttachmentsRepository()
-    inMemoryEventsRepository = new InMemoryEventsRepository(inMemoryEventAttachmentsRepository);
+    inMemoryEventAttachmentsRepository =
+      new InMemoryEventAttachmentsRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemoryArtistsRepository = new InMemoryArtistsRepository();
+    inMemoryEventsRepository = new InMemoryEventsRepository(
+      inMemoryEventAttachmentsRepository,
+      inMemoryAttachmentsRepository,
+      inMemoryArtistsRepository
+    );
     sut = new DeleteEventUseCase(inMemoryEventsRepository);
   });
 
@@ -28,13 +39,13 @@ describe("Delete Event", () => {
     inMemoryEventAttachmentsRepository.items.push(
       makeEventAttachment({
         eventId: newEvent.id,
-        attachmentId: new UniqueEntityID('1'),
+        attachmentId: new UniqueEntityID("1"),
       }),
       makeEventAttachment({
         eventId: newEvent.id,
-        attachmentId: new UniqueEntityID('2'),
-      }),
-    )
+        attachmentId: new UniqueEntityID("2"),
+      })
+    );
 
     await sut.execute({
       eventId: "event-1",
@@ -42,7 +53,7 @@ describe("Delete Event", () => {
     });
 
     expect(inMemoryEventsRepository.items).toHaveLength(0);
-    expect(inMemoryEventAttachmentsRepository.items).toHaveLength(0)
+    expect(inMemoryEventAttachmentsRepository.items).toHaveLength(0);
   });
 
   it("should not be able to delete a event from another user", async () => {

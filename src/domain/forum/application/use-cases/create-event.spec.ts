@@ -2,9 +2,13 @@ import { InMemoryEventsRepository } from "test/repositories/in-memory-event-repo
 import { CreateEventUseCase } from "./create-event";
 import { InMemoryEventAttachmentsRepository } from "test/repositories/in-memory-event-attachments-repository";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
+import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
+import { InMemoryArtistsRepository } from "test/repositories/in-memory-artists-repository";
 
-let inMemoryEventsRepository: InMemoryEventsRepository;
 let inMemoryEventAttachmentsRepository: InMemoryEventAttachmentsRepository;
+let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
+let inMemoryArtistsRepository: InMemoryArtistsRepository;
+let inMemoryEventsRepository: InMemoryEventsRepository;
 
 let sut: CreateEventUseCase;
 
@@ -12,8 +16,12 @@ describe("Create Events", () => {
   beforeEach(() => {
     inMemoryEventAttachmentsRepository =
       new InMemoryEventAttachmentsRepository();
+    inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
+    inMemoryArtistsRepository = new InMemoryArtistsRepository();
     inMemoryEventsRepository = new InMemoryEventsRepository(
-      inMemoryEventAttachmentsRepository
+      inMemoryEventAttachmentsRepository,
+      inMemoryAttachmentsRepository,
+      inMemoryArtistsRepository
     );
     sut = new CreateEventUseCase(inMemoryEventsRepository);
   });
@@ -58,12 +66,12 @@ describe("Create Events", () => {
     expect(inMemoryEventAttachmentsRepository.items).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          attachmentId: new UniqueEntityID('1')
+          attachmentId: new UniqueEntityID("1"),
         }),
         expect.objectContaining({
-          attachmentId: new UniqueEntityID('2')
-        })
+          attachmentId: new UniqueEntityID("2"),
+        }),
       ])
-    )
+    );
   });
 });

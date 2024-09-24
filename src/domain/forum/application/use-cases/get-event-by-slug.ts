@@ -1,8 +1,8 @@
 import { Either, left, right } from '@/core/either'
-import { Event } from '../../enterprise/entities/event'
 import { EventsRepository } from '../repositories/events-repository'
 import { ResourceNotFoundError } from '../../../../core/errors/errors/resource-not-found-error'
 import { Injectable } from '@nestjs/common'
+import { EventDetails } from '../../enterprise/entities/value-objects/event-details'
 
 interface GetEventBySlugUseCaseRequest {
   slug: string
@@ -11,7 +11,7 @@ interface GetEventBySlugUseCaseRequest {
 type GetEventBySlugUseCaseResponse = Either<
   ResourceNotFoundError,
   {
-    event: Event
+    event: EventDetails
   }
 >
 
@@ -22,7 +22,7 @@ export class GetEventBySlugUseCase {
   async execute({
     slug,
   }: GetEventBySlugUseCaseRequest): Promise<GetEventBySlugUseCaseResponse> {
-    const event = await this.eventsRepository.findBySlug(slug)
+    const event = await this.eventsRepository.findDetailsBySlug(slug)
 
     if (!event) {
       return left(new ResourceNotFoundError())

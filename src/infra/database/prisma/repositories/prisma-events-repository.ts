@@ -5,6 +5,8 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { PrismaEventMapper } from "../mapper/prisma-event-mapper";
 import { EventAttachmentsRepository } from "@/domain/forum/application/repositories/event-attachments-repository";
+import { EventDetails } from "@/domain/forum/enterprise/entities/value-objects/event-details";
+import { PrismaEventDetailsMapper } from "../mapper/prisma-event-details-mapper";
 
 @Injectable()
 export class PrismaEventsRepository implements EventsRepository {
@@ -39,6 +41,24 @@ export class PrismaEventsRepository implements EventsRepository {
     }
 
     return PrismaEventMapper.toDomain(event);
+  }
+
+  async findDetailsBySlug(slug: string): Promise<EventDetails | null> {
+    const event = await this.prisma.event.findUnique({
+      where: {
+        slug,
+      },
+      include:{
+        author: true,
+        attachments: true,
+      }
+    });
+
+    if (!event) {
+      return null;
+    }
+
+    return PrismaEventDetailsMapper.toDomain(event);
   }
 
   async findManyRecent({ page }: PaginationParams): Promise<Event[]> {
