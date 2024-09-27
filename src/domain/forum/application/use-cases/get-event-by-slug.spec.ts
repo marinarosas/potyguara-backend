@@ -4,14 +4,14 @@ import { makeEvent } from "test/factories/make-event";
 import { InMemoryEventAttachmentsRepository } from "test/repositories/in-memory-event-attachments-repository";
 import { InMemoryEventsRepository } from "test/repositories/in-memory-event-repository";
 import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
-import { InMemoryArtistsRepository } from "test/repositories/in-memory-artists-repository";
-import { makeArtist } from "test/factories/make-artist";
 import { makeAttachment } from "test/factories/make-attachment";
 import { makeEventAttachment } from "test/factories/make-event-attachment";
+import { InMemoryViewersRepository } from "test/repositories/in-memory-viewer-repository";
+import { makeViewer } from "test/factories/make-viewer";
 
 let inMemoryEventAttachmentsRepository: InMemoryEventAttachmentsRepository;
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
-let inMemoryArtistsRepository: InMemoryArtistsRepository;
+let inMemoryViewersRepository: InMemoryViewersRepository;
 let inMemoryEventsRepository: InMemoryEventsRepository;
 let sut: GetEventBySlugUseCase;
 
@@ -20,22 +20,22 @@ describe("Get Event By Slug", () => {
     inMemoryEventAttachmentsRepository =
       new InMemoryEventAttachmentsRepository();
     inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
-    inMemoryArtistsRepository = new InMemoryArtistsRepository();
+    inMemoryViewersRepository = new InMemoryViewersRepository();
     inMemoryEventsRepository = new InMemoryEventsRepository(
       inMemoryEventAttachmentsRepository,
       inMemoryAttachmentsRepository,
-      inMemoryArtistsRepository
+      inMemoryViewersRepository
     );
     sut = new GetEventBySlugUseCase(inMemoryEventsRepository);
   });
 
   it("should be able to get a event by slug", async () => {
-    const artist = makeArtist({ name: "John Doe" });
+    const viewer = makeViewer({ name: "John Doe" });
 
-    inMemoryArtistsRepository.items.push(artist);
+    inMemoryViewersRepository.items.push(viewer);
 
     const newEvent = makeEvent({
-      authorId: artist.id,
+      authorId: viewer.id,
       slug: Slug.create("example-event"),
     });
 

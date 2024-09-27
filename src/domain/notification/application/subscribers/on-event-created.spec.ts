@@ -9,13 +9,13 @@ import { InMemoryNotificationsRepository } from "test/repositories/in-memory-not
 import { vi, SpyInstance } from "vitest";
 import { waitFor } from "test/util/wait-for";
 import { makeEvent } from "test/factories/make-event";
-import { InMemoryArtistsRepository } from "test/repositories/in-memory-artists-repository";
 import { InMemoryEventAttachmentsRepository } from "test/repositories/in-memory-event-attachments-repository";
 import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
+import { InMemoryViewersRepository } from "test/repositories/in-memory-viewer-repository";
 
 let inMemoryEventAttachmentsRepository: InMemoryEventAttachmentsRepository;
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
-let inMemoryArtistsRepository: InMemoryArtistsRepository;
+let inMemoryViewerRepository: InMemoryViewersRepository;
 let inMemoryEventsRepository: InMemoryEventsRepository;
 let inMemoryNotificationRepository: InMemoryNotificationsRepository;
 let sendNotificationUseCase: SendNotificationUseCase;
@@ -30,11 +30,11 @@ describe("On Event Created", () => {
     inMemoryEventAttachmentsRepository =
       new InMemoryEventAttachmentsRepository();
     inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
-    inMemoryArtistsRepository = new InMemoryArtistsRepository();
+    inMemoryViewerRepository = new InMemoryViewersRepository();
     inMemoryEventsRepository = new InMemoryEventsRepository(
       inMemoryEventAttachmentsRepository,
       inMemoryAttachmentsRepository,
-      inMemoryArtistsRepository
+      inMemoryViewerRepository
     );
     inMemoryNotificationRepository = new InMemoryNotificationsRepository();
     sendNotificationUseCase = new SendNotificationUseCase(

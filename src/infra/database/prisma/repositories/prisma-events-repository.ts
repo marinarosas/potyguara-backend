@@ -7,11 +7,14 @@ import { PrismaEventMapper } from "../mapper/prisma-event-mapper";
 import { EventAttachmentsRepository } from "@/domain/forum/application/repositories/event-attachments-repository";
 import { EventDetails } from "@/domain/forum/enterprise/entities/value-objects/event-details";
 import { PrismaEventDetailsMapper } from "../mapper/prisma-event-details-mapper";
+import { DomainEvents } from "@/core/events/domain-events";
+import { CacheRepository } from "@/infra/cache/cache-repository";
 
 @Injectable()
 export class PrismaEventsRepository implements EventsRepository {
   constructor(
     private prisma: PrismaService,
+    private cache: CacheRepository,
     private eventAttachmentsRepository: EventAttachmentsRepository
   ) {}
 
@@ -44,21 +47,33 @@ export class PrismaEventsRepository implements EventsRepository {
   }
 
   async findDetailsBySlug(slug: string): Promise<EventDetails | null> {
+    const cacheHit = await this.cache.get(`event:${slug}:details`)
+
+    if(cacheHit){
+      const cachedData = JSON.parse(cacheHit)
+
+      return PrismaEventDetailsMapper.toDomain(cachedData)
+    }
+
     const event = await this.prisma.event.findUnique({
       where: {
         slug,
       },
-      include:{
+      include: {
         author: true,
         attachments: true,
-      }
+      },
     });
 
     if (!event) {
       return null;
     }
 
-    return PrismaEventDetailsMapper.toDomain(event);
+    await this.cache.set(`event:${slug}:details`, JSON.stringify(event));
+
+    const eventDetails = PrismaEventDetailsMapper.toDomain(event);
+
+    return eventDetails;
   }
 
   async findManyRecent({ page }: PaginationParams): Promise<Event[]> {
@@ -83,6 +98,8 @@ export class PrismaEventsRepository implements EventsRepository {
     await this.eventAttachmentsRepository.createMany(
       event.attachments.getItems()
     );
+
+    DomainEvents.dispatchEventsForAggregate(event.id);
   }
 
   async save(event: Event): Promise<void> {
@@ -101,7 +118,10 @@ export class PrismaEventsRepository implements EventsRepository {
       this.eventAttachmentsRepository.deleteMany(
         event.attachments.getRemovedItems()
       ),
+      this.cache.delete(`event:${data.slug}:details`)
     ]);
+
+    DomainEvents.dispatchEventsForAggregate(event.id);
   }
 
   async delete(event: Event): Promise<void> {

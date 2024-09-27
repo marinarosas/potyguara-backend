@@ -1,11 +1,14 @@
 import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { Role } from '@prisma/client'
+
 
 export interface ViewerProps {
   name: string
   username: string
   email: string
   password: string
+  role: Role
 }
 
 export class Viewer extends Entity<ViewerProps> {
@@ -23,6 +26,10 @@ export class Viewer extends Entity<ViewerProps> {
 
   get password(){
     return this.props.password
+  }
+
+  get role(){
+    return this.props.role
   }
 
   static create(props: ViewerProps, id?: UniqueEntityID) {

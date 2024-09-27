@@ -1,9 +1,5 @@
 import { faker } from '@faker-js/faker'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import {
-  Event,
-  EventProps,
-} from '@/domain/forum/enterprise/entities/event'
 import { Viewer, ViewerProps } from '@/domain/forum/enterprise/entities/viewer'
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
@@ -19,6 +15,7 @@ export function makeViewer(
       username: faker.internet.userName(),
       email: faker.internet.email(),
       password: faker.internet.password(),
+      role: 'VIEWER',
       ...override,
     },
     id,

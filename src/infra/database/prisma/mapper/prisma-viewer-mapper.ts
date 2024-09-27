@@ -10,6 +10,7 @@ export class PrismaViewerMapper {
         username: raw.username,
         email: raw.email,
         password: raw.password,
+        role: raw.role,
       },
       new UniqueEntityID(raw.id)
     );
@@ -22,6 +23,7 @@ export class PrismaViewerMapper {
         username: viewer.username,
         email: viewer.email,
         password: viewer.password,
+        role: viewer.role,
     };
   }
 }

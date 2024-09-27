@@ -2,12 +2,12 @@ import { InMemoryEventsRepository } from "test/repositories/in-memory-event-repo
 import { FetchRecentEventsUseCase } from "./fetch-recent-events";
 import { makeEvent } from "test/factories/make-event";
 import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
-import { InMemoryArtistsRepository } from "test/repositories/in-memory-artists-repository";
 import { InMemoryEventAttachmentsRepository } from "test/repositories/in-memory-event-attachments-repository";
+import { InMemoryViewersRepository } from "test/repositories/in-memory-viewer-repository";
 
 let inMemoryEventAttachmentsRepository: InMemoryEventAttachmentsRepository;
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
-let inMemoryArtistsRepository: InMemoryArtistsRepository;
+let inMemoryViewersRepository: InMemoryViewersRepository;
 let inMemoryEventsRepository: InMemoryEventsRepository;
 let sut: FetchRecentEventsUseCase;
 
@@ -16,11 +16,11 @@ describe("Fetch Recent Events", () => {
     inMemoryEventAttachmentsRepository =
       new InMemoryEventAttachmentsRepository();
     inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
-    inMemoryArtistsRepository = new InMemoryArtistsRepository();
+    inMemoryViewersRepository = new InMemoryViewersRepository();
     inMemoryEventsRepository = new InMemoryEventsRepository(
       inMemoryEventAttachmentsRepository,
       inMemoryAttachmentsRepository,
-      inMemoryArtistsRepository
+      inMemoryViewersRepository
     );
     sut = new FetchRecentEventsUseCase(inMemoryEventsRepository);
   });

@@ -4,12 +4,14 @@ import { Viewer } from "../../enterprise/entities/viewer";
 import { ViewerRepository } from "../repositories/viewer-repository";
 import { HashGenerator } from "../cryptography/hash-generator";
 import { ViewerAlreadyExistsError } from "./errors/viewer-already-exists-error";
+import { Role } from "@prisma/client";
 
 interface RegisterViewerUseCaseRequest {
   name: string;
   username: string;
   email: string;
   password: string;
+  role: Role;
 }
 
 type RegisterViewerUseCaseResponse = Either<
@@ -31,6 +33,7 @@ export class RegisterViewerUseCase {
     username,
     email,
     password,
+    role,
   }: RegisterViewerUseCaseRequest): Promise<RegisterViewerUseCaseResponse> {
     const viewerWithSameEmail = await this.viewerRepository.findByEmail(email);
 
@@ -50,7 +53,8 @@ export class RegisterViewerUseCase {
        name,
        username,
        email,
-       password: hashedPassword 
+       password: hashedPassword,
+       role, 
     })
 
     await this.viewerRepository.create(viewer)

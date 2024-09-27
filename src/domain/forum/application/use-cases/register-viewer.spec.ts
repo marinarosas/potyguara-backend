@@ -16,27 +16,29 @@ describe("Register Viewer", () => {
 
   it("should be able to register a new viewer", async () => {
     const result = await sut.execute({
-     name: "John Doe",
-     username: "johndoe",
-     email: "johndoe@example.com",
-     password: "123456"
+      name: "John Doe",
+      username: "johndoe",
+      email: "johndoe@example.com",
+      password: "123456",
+      role: "VIEWER",
     });
 
     expect(result.isRight()).toBe(true);
     expect(result.value).toEqual({
-        viewer: inMemoryViewersRepository.items[0]
+      viewer: inMemoryViewersRepository.items[0],
     });
   });
 
   it("should hash viewer password upon registration", async () => {
     const result = await sut.execute({
-        name: "John Doe",
-        username: "johndoe",
-        email: "johndoe@example.com",
-        password: "123456"
+      name: "John Doe",
+      username: "johndoe",
+      email: "johndoe@example.com",
+      password: "123456",
+      role: "VIEWER",
     });
 
-    const hashedPassword = await fakeHasher.hash('123456')
+    const hashedPassword = await fakeHasher.hash("123456");
 
     expect(result.isRight()).toBe(true);
     expect(inMemoryViewersRepository.items[0].password).toEqual(hashedPassword);

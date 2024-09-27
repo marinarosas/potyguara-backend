@@ -1,6 +1,4 @@
 import { BadRequestException, Controller, FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePipe, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
-import { EventPresenter } from "../presenters/event-presenter";
-import { GetEventBySlugUseCase } from "@/domain/forum/application/use-cases/get-event-by-slug";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UploadAndCreateAttachmentUseCase } from "@/domain/forum/application/use-cases/upload-and-create-attachment";
 import { InvalidAttachmentTypeError } from "@/domain/forum/application/use-cases/errors/invalid-attachment-type";

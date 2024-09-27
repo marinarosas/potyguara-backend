@@ -6,11 +6,11 @@ import { makeEvent } from "test/factories/make-event";
 import { InMemoryEventAttachmentsRepository } from "test/repositories/in-memory-event-attachments-repository";
 import { makeEventAttachment } from "test/factories/make-event-attachment";
 import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
-import { InMemoryArtistsRepository } from "test/repositories/in-memory-artists-repository";
+import { InMemoryViewersRepository } from "test/repositories/in-memory-viewer-repository";
 
 let inMemoryEventAttachmentsRepository: InMemoryEventAttachmentsRepository;
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
-let inMemoryArtistsRepository: InMemoryArtistsRepository;
+let inMemoryViewersRepository: InMemoryViewersRepository;
 let inMemoryEventsRepository: InMemoryEventsRepository;
 let sut: DeleteEventUseCase;
 
@@ -19,11 +19,11 @@ describe("Delete Event", () => {
     inMemoryEventAttachmentsRepository =
       new InMemoryEventAttachmentsRepository();
     inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
-    inMemoryArtistsRepository = new InMemoryArtistsRepository();
+    inMemoryViewersRepository = new InMemoryViewersRepository();
     inMemoryEventsRepository = new InMemoryEventsRepository(
       inMemoryEventAttachmentsRepository,
       inMemoryAttachmentsRepository,
-      inMemoryArtistsRepository
+      inMemoryViewersRepository
     );
     sut = new DeleteEventUseCase(inMemoryEventsRepository);
   });

@@ -7,6 +7,7 @@ export class ViewerPresenter {
       name: viewer.name,
       email: viewer.email,
       username: viewer.username,
+      role: viewer.role,
     };
   }
 }

@@ -25,7 +25,8 @@ describe("Create account (E2E)", () => {
         name: "John Doe",
         username: "johndoe",
         email: 'johndoe2024@example.com',
-        password: '123456'
+        password: '123456',
+        role: 'VIEWER',
     })
 
     expect(response.statusCode).toBe(201)

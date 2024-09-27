@@ -5,11 +5,11 @@ import { NotAllowedError } from "../../../../core/errors/errors/not-allowed-erro
 import { makeEvent } from "test/factories/make-event";
 import { InMemoryEventAttachmentsRepository } from "test/repositories/in-memory-event-attachments-repository";
 import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
-import { InMemoryArtistsRepository } from "test/repositories/in-memory-artists-repository";
+import { InMemoryViewersRepository } from "test/repositories/in-memory-viewer-repository";
 
 let inMemoryEventAttachmentsRepository: InMemoryEventAttachmentsRepository;
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
-let inMemoryArtistsRepository: InMemoryArtistsRepository;
+let inMemoryViewersRepository: InMemoryViewersRepository;
 let inMemoryEventsRepository: InMemoryEventsRepository;
 let sut: EditEventUseCase;
 
@@ -18,11 +18,11 @@ describe("Edit Event", () => {
     inMemoryEventAttachmentsRepository =
       new InMemoryEventAttachmentsRepository();
     inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
-    inMemoryArtistsRepository = new InMemoryArtistsRepository();
+    inMemoryViewersRepository = new InMemoryViewersRepository();
     inMemoryEventsRepository = new InMemoryEventsRepository(
       inMemoryEventAttachmentsRepository,
       inMemoryAttachmentsRepository,
-      inMemoryArtistsRepository
+      inMemoryViewersRepository
     );
     sut = new EditEventUseCase(
       inMemoryEventsRepository,
