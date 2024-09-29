@@ -3,9 +3,9 @@ import { PaginationParams } from "@/core/repositories/pagination-params";
 import { EventsRepository } from "@/domain/forum/application/repositories/events-repository";
 import { Event } from "@/domain/forum/enterprise/entities/event";
 import { InMemoryAttachmentsRepository } from "./in-memory-attachments-repository";
-import { InMemoryArtistsRepository } from "./in-memory-artists-repository";
 import { InMemoryEventAttachmentsRepository } from "./in-memory-event-attachments-repository";
 import { EventDetails } from "@/domain/forum/enterprise/entities/value-objects/event-details";
+import { InMemoryViewersRepository } from "./in-memory-viewer-repository";
 
 export class InMemoryEventsRepository implements EventsRepository {
   public items: Event[] = [];
@@ -13,7 +13,7 @@ export class InMemoryEventsRepository implements EventsRepository {
   constructor(
     private eventAttachmentsRepository: InMemoryEventAttachmentsRepository,
     private attachmentsRepository: InMemoryAttachmentsRepository,
-    private artistRepository: InMemoryArtistsRepository
+    private viewerRepository: InMemoryViewersRepository
   ) {}
 
   async findById(id: string) {
@@ -43,7 +43,7 @@ export class InMemoryEventsRepository implements EventsRepository {
       return null;
     }
 
-    const author = this.artistRepository.items.find((artist) => {
+    const author = this.viewerRepository.items.find((artist) => {
       return artist.id.equals(event.authorId);
     });
 
@@ -92,6 +92,15 @@ export class InMemoryEventsRepository implements EventsRepository {
 
   async findManyRecent({ page }: PaginationParams) {
     const events = this.items
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .slice((page - 1) * 20, page * 20);
+
+    return events;
+  }
+
+  async findManyByAuthorId(authorId: string, { page }: PaginationParams) {
+    const events = this.items
+      .filter((item) => item.authorId.toString() === authorId)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice((page - 1) * 20, page * 20);
 

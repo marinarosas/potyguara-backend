@@ -21,6 +21,8 @@ import { StorageModule } from "../storage/storage.module";
 import { UploadAndCreateAttachmentUseCase } from "@/domain/forum/application/use-cases/upload-and-create-attachment";
 import { ReadNotificationController } from "./controllers/read-notification.controller";
 import { ReadNotificationUseCase } from "@/domain/notification/application/use-cases/read-notification";
+import { FetchEventsByAuthorIdController } from "./controllers/fetch-events-by-authorId.controller";
+import { FetchEventsByAuthorIdUseCase } from "@/domain/forum/application/use-cases/fetch-events-by-authorId";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, StorageModule],
@@ -29,6 +31,7 @@ import { ReadNotificationUseCase } from "@/domain/notification/application/use-c
     AuthenticateController,
     CreateEventController,
     FetchRecentEventsController,
+    FetchEventsByAuthorIdController,
     ProfileController,
     GetEventBySlugController,
     EditEventController,
@@ -39,6 +42,7 @@ import { ReadNotificationUseCase } from "@/domain/notification/application/use-c
   providers: [
     CreateEventUseCase,
     FetchRecentEventsUseCase,
+    FetchEventsByAuthorIdUseCase,
     RegisterViewerUseCase,
     AuthenticateViewerUseCase,
     GetEventBySlugUseCase,

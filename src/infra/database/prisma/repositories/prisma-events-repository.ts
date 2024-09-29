@@ -47,12 +47,12 @@ export class PrismaEventsRepository implements EventsRepository {
   }
 
   async findDetailsBySlug(slug: string): Promise<EventDetails | null> {
-    const cacheHit = await this.cache.get(`event:${slug}:details`)
+    const cacheHit = await this.cache.get(`event:${slug}:details`);
 
-    if(cacheHit){
-      const cachedData = JSON.parse(cacheHit)
+    if (cacheHit) {
+      const cachedData = JSON.parse(cacheHit);
 
-      return PrismaEventDetailsMapper.toDomain(cachedData)
+      return PrismaEventDetailsMapper.toDomain(cachedData);
     }
 
     const event = await this.prisma.event.findUnique({
@@ -78,6 +78,25 @@ export class PrismaEventsRepository implements EventsRepository {
 
   async findManyRecent({ page }: PaginationParams): Promise<Event[]> {
     const events = await this.prisma.event.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 20,
+      skip: (page - 1) * 20,
+    });
+
+    return events.map(PrismaEventMapper.toDomain);
+  }
+
+  async findManyByAuthorId(
+    authorId: string,
+    { page }: PaginationParams
+  ): Promise<Event[]> {
+  
+    const events = await this.prisma.event.findMany({
+      where:{
+        authorId,
+      },
       orderBy: {
         createdAt: "desc",
       },
@@ -118,7 +137,7 @@ export class PrismaEventsRepository implements EventsRepository {
       this.eventAttachmentsRepository.deleteMany(
         event.attachments.getRemovedItems()
       ),
-      this.cache.delete(`event:${data.slug}:details`)
+      this.cache.delete(`event:${data.slug}:details`),
     ]);
 
     DomainEvents.dispatchEventsForAggregate(event.id);
