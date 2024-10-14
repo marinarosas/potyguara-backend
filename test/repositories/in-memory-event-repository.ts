@@ -5,7 +5,7 @@ import { Event } from "@/domain/forum/enterprise/entities/event";
 import { InMemoryAttachmentsRepository } from "./in-memory-attachments-repository";
 import { InMemoryEventAttachmentsRepository } from "./in-memory-event-attachments-repository";
 import { EventDetails } from "@/domain/forum/enterprise/entities/value-objects/event-details";
-import { InMemoryViewersRepository } from "./in-memory-viewer-repository";
+import { InMemoryUsersRepository } from "./in-memory-user-repository";
 
 export class InMemoryEventsRepository implements EventsRepository {
   public items: Event[] = [];
@@ -13,7 +13,7 @@ export class InMemoryEventsRepository implements EventsRepository {
   constructor(
     private eventAttachmentsRepository: InMemoryEventAttachmentsRepository,
     private attachmentsRepository: InMemoryAttachmentsRepository,
-    private viewerRepository: InMemoryViewersRepository
+    private userRepository: InMemoryUsersRepository
   ) {}
 
   async findById(id: string) {
@@ -43,7 +43,7 @@ export class InMemoryEventsRepository implements EventsRepository {
       return null;
     }
 
-    const author = this.viewerRepository.items.find((artist) => {
+    const author = this.userRepository.items.find((artist) => {
       return artist.id.equals(event.authorId);
     });
 

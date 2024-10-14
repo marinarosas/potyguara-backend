@@ -3,7 +3,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Role } from '@prisma/client'
 
 
-export interface ViewerProps {
+export interface UserProps {
   name: string
   username: string
   email: string
@@ -11,7 +11,7 @@ export interface ViewerProps {
   role: Role
 }
 
-export class Viewer extends Entity<ViewerProps> {
+export class User extends Entity<UserProps> {
   get name(){
     return this.props.name
   }
@@ -32,9 +32,9 @@ export class Viewer extends Entity<ViewerProps> {
     return this.props.role
   }
 
-  static create(props: ViewerProps, id?: UniqueEntityID) {
-    const viewer = new Viewer(props, id)
+  static create(props: UserProps, id?: UniqueEntityID) {
+    const user = new User(props, id)
 
-    return viewer
+    return user
   }
 }

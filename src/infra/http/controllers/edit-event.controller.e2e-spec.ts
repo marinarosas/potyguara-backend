@@ -8,12 +8,12 @@ import request from "supertest";
 import { AttachmentFactory } from "test/factories/make-attachment";
 import { EventFactory } from "test/factories/make-event";
 import { EventAttachmentFactory } from "test/factories/make-event-attachment";
-import { ViewerFactory } from "test/factories/make-viewer";
+import { UserFactory } from "test/factories/make-user";
 
 describe("Edit event (E2E)", () => {
   let app: INestApplication;
   let prisma: PrismaService;
-  let viewerFactory: ViewerFactory;
+  let userFactory: UserFactory;
   let eventFactory: EventFactory;
   let attachmentFactory: AttachmentFactory;
   let eventAttachmentFactory: EventAttachmentFactory;
@@ -23,7 +23,7 @@ describe("Edit event (E2E)", () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
       providers: [
-        ViewerFactory,
+        UserFactory,
         EventFactory,
         AttachmentFactory,
         EventAttachmentFactory,
@@ -33,7 +33,7 @@ describe("Edit event (E2E)", () => {
     app = moduleRef.createNestApplication();
 
     prisma = moduleRef.get(PrismaService);
-    viewerFactory = moduleRef.get(ViewerFactory);
+    userFactory = moduleRef.get(UserFactory);
     eventFactory = moduleRef.get(EventFactory);
     attachmentFactory = moduleRef.get(AttachmentFactory);
     eventAttachmentFactory = moduleRef.get(EventAttachmentFactory);
@@ -43,7 +43,7 @@ describe("Edit event (E2E)", () => {
   });
 
   test("[PUT] /events/:id", async () => {
-    const user = await viewerFactory.makePrismaViewer();
+    const user = await userFactory.makePrismaUser();
 
     const acessToken = jwt.sign({ sub: user.id.toString() });
 

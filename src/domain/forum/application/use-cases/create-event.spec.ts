@@ -3,11 +3,11 @@ import { CreateEventUseCase } from "./create-event";
 import { InMemoryEventAttachmentsRepository } from "test/repositories/in-memory-event-attachments-repository";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
-import { InMemoryViewersRepository } from "test/repositories/in-memory-viewer-repository";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-user-repository";
 
 let inMemoryEventAttachmentsRepository: InMemoryEventAttachmentsRepository;
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
-let inMemoryViewerRepository: InMemoryViewersRepository;
+let inMemoryUserRepository: InMemoryUsersRepository;
 let inMemoryEventsRepository: InMemoryEventsRepository;
 
 let sut: CreateEventUseCase;
@@ -17,11 +17,11 @@ describe("Create Events", () => {
     inMemoryEventAttachmentsRepository =
       new InMemoryEventAttachmentsRepository();
     inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
-    inMemoryViewerRepository = new InMemoryViewersRepository();
+    inMemoryUserRepository = new InMemoryUsersRepository();
     inMemoryEventsRepository = new InMemoryEventsRepository(
       inMemoryEventAttachmentsRepository,
       inMemoryAttachmentsRepository,
-      inMemoryViewerRepository
+      inMemoryUserRepository
     );
     sut = new CreateEventUseCase(inMemoryEventsRepository);
   });

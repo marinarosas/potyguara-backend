@@ -1,28 +1,28 @@
 import { Either, left, right } from "@/core/either";
 import { Injectable } from "@nestjs/common";
-import { ViewerRepository } from "../repositories/viewer-repository";
 import { HashCompare } from "../cryptography/hash-compare";
 import { Encrypter } from "../cryptography/encrypter";
 import { WrongCredentialsError } from "./errors/wrong-credentials-error";
-import { Viewer } from "../../enterprise/entities/viewer";
+import { User } from "../../enterprise/entities/user";
+import { UserRepository } from "../repositories/user-repository";
 
-interface AuthenticateViewerUseCaseRequest {
+interface AuthenticateUserUseCaseRequest {
   email: string;
   password: string;
 }
 
-type AuthenticateViewerUseCaseResponse = Either<
+type AuthenticateUserUseCaseResponse = Either<
   WrongCredentialsError,
   {
-    viewer: Viewer
+    user: User
     accessToken: string;
   }
 >;
 
 @Injectable()
-export class AuthenticateViewerUseCase {
+export class AuthenticateUserUseCase {
   constructor(
-    private viewerRepository: ViewerRepository,
+    private userRepository: UserRepository,
     private hashCompare: HashCompare,
     private encrypter: Encrypter
   ) {}
@@ -30,27 +30,27 @@ export class AuthenticateViewerUseCase {
   async execute({
     email,
     password,
-  }: AuthenticateViewerUseCaseRequest): Promise<AuthenticateViewerUseCaseResponse> {
-    const viewer = await this.viewerRepository.findByEmail(email);
+  }: AuthenticateUserUseCaseRequest): Promise<AuthenticateUserUseCaseResponse> {
+    const user = await this.userRepository.findByEmail(email);
 
-    if (!viewer) {
+    if (!user) {
       return left(new WrongCredentialsError());
     }
 
     const isPasswordValid = await this.hashCompare.compare(
       password,
-      viewer.password
+      user.password
     );
 
     if (!isPasswordValid) {
       return left(new WrongCredentialsError());
     }
     const accessToken = await this.encrypter.encrypt({
-      sub: viewer.id.toString(),
+      sub: user.id.toString(),
     });
 
     return right({
-      viewer,
+      user,
       accessToken,
     });
   }

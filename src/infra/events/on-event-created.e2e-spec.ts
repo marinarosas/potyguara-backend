@@ -7,26 +7,26 @@ import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import request from "supertest";
 import { EventFactory } from "test/factories/make-event";
-import { ViewerFactory } from "test/factories/make-viewer";
+import { UserFactory } from "test/factories/make-user";
 import { waitFor } from "test/util/wait-for";
 
 describe("On event created (E2E)", () => {
   let app: INestApplication;
   let prisma: PrismaService;
-  let viewerFactory: ViewerFactory;
+  let userFactory: UserFactory;
   let eventFactory: EventFactory;
   let jwt: JwtService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [ViewerFactory, EventFactory ],
+      providers: [UserFactory, EventFactory ],
     }).compile();
 
     app = moduleRef.createNestApplication();
 
     prisma = moduleRef.get(PrismaService);
-    viewerFactory = moduleRef.get(ViewerFactory);
+    userFactory = moduleRef.get(UserFactory);
     eventFactory = moduleRef.get(EventFactory);
     jwt = moduleRef.get(JwtService);
 
@@ -36,7 +36,7 @@ describe("On event created (E2E)", () => {
   });
 
   it("should send a notification when event is created", async () => {
-    const user = await viewerFactory.makePrismaViewer();
+    const user = await userFactory.makePrismaUser();
 
     const acessToken = jwt.sign({ sub: user.id.toString() });
 

@@ -1,15 +1,15 @@
 import { faker } from '@faker-js/faker'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { Viewer, ViewerProps } from '@/domain/forum/enterprise/entities/viewer'
+import { User, UserProps } from '@/domain/forum/enterprise/entities/user'
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
-import { PrismaViewerMapper } from '@/infra/database/prisma/mapper/prisma-viewer-mapper'
+import { PrismaUserMapper } from '@/infra/database/prisma/mapper/prisma-user-mapper'
 
-export function makeViewer(
-  override: Partial<ViewerProps> = {},
+export function makeUser(
+  override: Partial<UserProps> = {},
   id?: UniqueEntityID,
 ) {
-  const viewer = Viewer.create(
+  const user = User.create(
     {
       name: faker.person.fullName(),
       username: faker.internet.userName(),
@@ -21,20 +21,20 @@ export function makeViewer(
     id,
   )
 
-  return viewer
+  return user
 }
 
 @Injectable()
-export class ViewerFactory {
+export class UserFactory {
   constructor(private prisma: PrismaService){}
 
-  async makePrismaViewer(data: Partial<ViewerProps> = {}): Promise<Viewer>{
-    const viewer = makeViewer(data)
+  async makePrismaUser(data: Partial<UserProps> = {}): Promise<User>{
+    const user = makeUser(data)
 
     await this.prisma.user.create({
-      data: PrismaViewerMapper.toPrisma(viewer)
+      data: PrismaUserMapper.toPrisma(user)
     })
 
-    return viewer
+    return user
   }
 }

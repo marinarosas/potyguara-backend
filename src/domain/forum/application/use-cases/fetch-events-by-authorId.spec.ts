@@ -2,14 +2,14 @@ import { InMemoryEventsRepository } from "test/repositories/in-memory-event-repo
 import { makeEvent } from "test/factories/make-event";
 import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 import { InMemoryEventAttachmentsRepository } from "test/repositories/in-memory-event-attachments-repository";
-import { InMemoryViewersRepository } from "test/repositories/in-memory-viewer-repository";
-import { makeViewer } from "test/factories/make-viewer";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-user-repository";
+import { makeUser } from "test/factories/make-user";
 import { FakeHasher } from "test/cryptography/fake-hasher";
 import { FetchEventsByAuthorIdUseCase } from "./fetch-events-by-authorId";
 
 let inMemoryEventAttachmentsRepository: InMemoryEventAttachmentsRepository;
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
-let inMemoryViewersRepository: InMemoryViewersRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryEventsRepository: InMemoryEventsRepository;
 let sut: FetchEventsByAuthorIdUseCase;
 let fakeHasher: FakeHasher;
@@ -19,18 +19,18 @@ describe("Fetch Recent Events By AuthorId", () => {
     inMemoryEventAttachmentsRepository =
       new InMemoryEventAttachmentsRepository();
     inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
-    inMemoryViewersRepository = new InMemoryViewersRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
     inMemoryEventsRepository = new InMemoryEventsRepository(
       inMemoryEventAttachmentsRepository,
       inMemoryAttachmentsRepository,
-      inMemoryViewersRepository
+      inMemoryUsersRepository
     );
     sut = new FetchEventsByAuthorIdUseCase(inMemoryEventsRepository);
     fakeHasher = new FakeHasher();
   });
 
   it("should be able to fetch recent events by Author id", async () => {
-    const user = makeViewer({
+    const user = makeUser({
       email: "johndoe@example.com",
       password: await fakeHasher.hash("123456"),
     });
@@ -63,7 +63,7 @@ describe("Fetch Recent Events By AuthorId", () => {
   });
 
   it("should be able to fetch paginated recent events", async () => {
-    const user = makeViewer({
+    const user = makeUser({
       email: "johndoe@example.com",
       password: await fakeHasher.hash("123456"),
     });

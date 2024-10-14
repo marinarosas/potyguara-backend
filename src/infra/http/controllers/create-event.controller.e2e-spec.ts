@@ -6,25 +6,25 @@ import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import request from "supertest";
 import { AttachmentFactory } from "test/factories/make-attachment";
-import { ViewerFactory } from "test/factories/make-viewer";
+import { UserFactory } from "test/factories/make-user";
 
 describe("Create event (E2E)", () => {
   let app: INestApplication;
   let prisma: PrismaService;
-  let viewerFactory: ViewerFactory;
+  let userFactory: UserFactory;
   let attachmentFactory: AttachmentFactory;
   let jwt: JwtService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [ViewerFactory, AttachmentFactory],
+      providers: [UserFactory, AttachmentFactory],
     }).compile();
 
     app = moduleRef.createNestApplication();
 
     prisma = moduleRef.get(PrismaService);
-    viewerFactory = moduleRef.get(ViewerFactory);
+    userFactory = moduleRef.get(UserFactory);
     attachmentFactory = moduleRef.get(AttachmentFactory);
     jwt = moduleRef.get(JwtService);
 
@@ -32,7 +32,7 @@ describe("Create event (E2E)", () => {
   });
 
   test("[POST] /events", async () => {
-    const user = await viewerFactory.makePrismaViewer();
+    const user = await userFactory.makePrismaUser();
 
     const acessToken = jwt.sign({ sub: user.id.toString() });
 

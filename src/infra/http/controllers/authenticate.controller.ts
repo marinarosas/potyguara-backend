@@ -1,10 +1,10 @@
 import { BadRequestException, Body, Controller, Post, UnauthorizedException, UsePipes } from "@nestjs/common";
 import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipe";
 import { z } from "zod";
-import { AuthenticateViewerUseCase } from "@/domain/forum/application/use-cases/authenticate.viewer";
-import { ViewerPresenter } from "../presenters/viewer-presenter";
+import { AuthenticateUserUseCase } from "@/domain/forum/application/use-cases/authenticate.user";
 import { WrongCredentialsError } from "@/domain/forum/application/use-cases/errors/wrong-credentials-error";
 import { Public } from "@/infra/auth/public";
+import { UserPresenter } from "../presenters/user-presenter";
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -17,7 +17,7 @@ type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>;
 @Public()
 export class AuthenticateController {
   constructor(
-    private authenticateViewer: AuthenticateViewerUseCase,
+    private authenticateUser: AuthenticateUserUseCase,
   ) {}
 
   @Post()
@@ -25,7 +25,7 @@ export class AuthenticateController {
   async handle(@Body() body: AuthenticateBodySchema) {
     const { email, password } = body;
 
-    const result = await this.authenticateViewer.execute({
+    const result = await this.authenticateUser.execute({
       email,
       password
     })
@@ -41,10 +41,10 @@ export class AuthenticateController {
       }
     }
 
-    const {accessToken, viewer} = result.value
+    const {accessToken, user} = result.value
     
     return {
-      user: ViewerPresenter.toHTTP(viewer),
+      user: UserPresenter.toHTTP(user),
       token: accessToken,
     }
 }

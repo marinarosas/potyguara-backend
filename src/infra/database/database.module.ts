@@ -1,8 +1,8 @@
 import { PrismaService } from "./prisma/prisma.service";
 import { PrismaEventsRepository } from "./prisma/repositories/prisma-events-repository";
 import { EventsRepository } from "@/domain/forum/application/repositories/events-repository";
-import { ViewerRepository } from "@/domain/forum/application/repositories/viewer-repository";
-import { PrismaViewersRepository } from "./prisma/repositories/prisma-viewer-repository";
+import { UserRepository } from "@/domain/forum/application/repositories/user-repository";
+import { PrismaUsersRepository } from "./prisma/repositories/prisma-user-repository";
 import { PrismaEventAttachemntsRepository } from "./prisma/repositories/prisma-event-attachments-repository";
 import { EventAttachmentsRepository } from "@/domain/forum/application/repositories/event-attachments-repository";
 import { AttachmentsRepository } from "@/domain/forum/application/repositories/attachments-repository";
@@ -21,8 +21,8 @@ import { CacheModule } from "../cache/cache.module";
       useClass: PrismaEventsRepository,
     },
     {
-      provide: ViewerRepository,
-      useClass: PrismaViewersRepository,
+      provide: UserRepository,
+      useClass: PrismaUsersRepository,
     },
     {
       provide: EventAttachmentsRepository,
@@ -40,7 +40,7 @@ import { CacheModule } from "../cache/cache.module";
   exports: [
     PrismaService,
     EventsRepository,
-    ViewerRepository,
+    UserRepository,
     EventAttachmentsRepository,
     AttachmentsRepository,
     NotificationsRepository,

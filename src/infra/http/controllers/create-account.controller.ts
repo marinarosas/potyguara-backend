@@ -9,16 +9,17 @@ import {
 } from "@nestjs/common";
 import { z } from "zod";
 import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipe";
-import { RegisterViewerUseCase } from "@/domain/forum/application/use-cases/register-viewer";
-import { ViewerAlreadyExistsError } from "@/domain/forum/application/use-cases/errors/viewer-already-exists-error";
 import { Public } from "@/infra/auth/public";
+import { RegisterUserUseCase } from "@/domain/forum/application/use-cases/register-user";
+import { UserAlreadyExistsError } from "@/domain/forum/application/use-cases/errors/user-already-exists-error";
+import { Role } from "@prisma/client";
 
 const createAccountBodySchema = z.object({
   name: z.string(),
   username: z.string(),
   email: z.string().email(),
   password: z.string(),
-  role: z.enum(["ADMIN", "ARTIST", "VIEWER"]),
+  role: z.enum([Role.ADMIN, Role.ARTIST, Role.VIEWER]),
 });
 
 type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>
@@ -26,7 +27,7 @@ type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>
 @Controller("/sing-up")
 @Public()
 export class CreateAccountController {
-  constructor(private registerViewer: RegisterViewerUseCase) {}
+  constructor(private registerUser: RegisterUserUseCase) {}
 
   @Post()
   @HttpCode(201)
@@ -34,7 +35,7 @@ export class CreateAccountController {
   async handle(@Body() body: CreateAccountBodySchema) {
     const { name, username, email, password, role } = body
 
-   const result =  await this.registerViewer.execute({
+   const result =  await this.registerUser.execute({
     name,
     username,
     email,
@@ -46,7 +47,7 @@ export class CreateAccountController {
     const error = result.value
 
     switch(error.constructor) {
-      case ViewerAlreadyExistsError:
+      case UserAlreadyExistsError:
         throw new ConflictException(error.message)
       default:
         throw new BadRequestException(error.message)

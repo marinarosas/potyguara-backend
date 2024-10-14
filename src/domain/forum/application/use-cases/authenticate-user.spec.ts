@@ -1,35 +1,35 @@
-import { InMemoryViewersRepository } from "test/repositories/in-memory-viewer-repository";
 import { FakeHasher } from "test/cryptography/fake-hasher";
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
-import { AuthenticateViewerUseCase } from "./authenticate.viewer";
-import { makeViewer } from "test/factories/make-viewer";
+import { makeUser } from "test/factories/make-user";
+import { AuthenticateUserUseCase } from "./authenticate.user";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-user-repository";
 
-let inMemoryViewersRepository: InMemoryViewersRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let fakeHasher: FakeHasher;
 let fakeEncrypter: FakeEncrypter;
 
-let sut: AuthenticateViewerUseCase;
+let sut: AuthenticateUserUseCase;
 
-describe("Authenticate Viewer", () => {
+describe("Authenticate User", () => {
   beforeEach(() => {
-    inMemoryViewersRepository = new InMemoryViewersRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
     fakeHasher = new FakeHasher();
     fakeEncrypter = new FakeEncrypter();
 
-    sut = new AuthenticateViewerUseCase(
-      inMemoryViewersRepository,
+    sut = new AuthenticateUserUseCase(
+      inMemoryUsersRepository,
       fakeHasher,
       fakeEncrypter
     );
   });
 
-  it("should be able to authenticate a viewer", async () => {
-    const viewer = makeViewer({
+  it("should be able to authenticate a user", async () => {
+    const user = makeUser({
       email: "johndoe@example.com",
       password: await fakeHasher.hash("123456"),
     });
 
-    inMemoryViewersRepository.items.push(viewer);
+    inMemoryUsersRepository.items.push(user);
 
     const result = await sut.execute({
       email: "johndoe@example.com",
@@ -38,7 +38,7 @@ describe("Authenticate Viewer", () => {
 
     expect(result.isRight()).toBe(true);
     expect(result.value).toEqual({
-      viewer: expect.objectContaining({
+      user: expect.objectContaining({
         email: "johndoe@example.com"
       }),
       accessToken: expect.any(String),

@@ -6,11 +6,11 @@ import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import request from "supertest";
 import { NotificationFactory } from "test/factories/make-notification";
-import { ViewerFactory } from "test/factories/make-viewer";
+import { UserFactory } from "test/factories/make-user";
 
 describe("Read notification (E2E)", () => {
   let app: INestApplication;
-  let viewerFactory: ViewerFactory;
+  let userFactory: UserFactory;
   let notificationFactory: NotificationFactory
   let prisma: PrismaService
   let jwt: JwtService;
@@ -19,14 +19,14 @@ describe("Read notification (E2E)", () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
       providers: [
-        ViewerFactory,
+        UserFactory,
         NotificationFactory,
       ],
     }).compile();
 
     app = moduleRef.createNestApplication();
 
-    viewerFactory = moduleRef.get(ViewerFactory);
+    userFactory = moduleRef.get(UserFactory);
     notificationFactory = moduleRef.get(NotificationFactory);
     prisma = moduleRef.get(PrismaService);
     jwt = moduleRef.get(JwtService);
@@ -35,7 +35,7 @@ describe("Read notification (E2E)", () => {
   });
 
   test("[PATCH] /notifications/:notificationId/read", async () => {
-    const user = await viewerFactory.makePrismaViewer({
+    const user = await userFactory.makePrismaUser({
       name: "John Doe",
     });
 

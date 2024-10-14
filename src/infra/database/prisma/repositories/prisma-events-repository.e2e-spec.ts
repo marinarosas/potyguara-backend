@@ -8,11 +8,11 @@ import { Test } from "@nestjs/testing";
 import { AttachmentFactory } from "test/factories/make-attachment";
 import { EventFactory } from "test/factories/make-event";
 import { EventAttachmentFactory } from "test/factories/make-event-attachment";
-import { ViewerFactory } from "test/factories/make-viewer";
+import { UserFactory } from "test/factories/make-user";
 
 describe("Prisma Event Repository (E2E)", () => {
   let app: INestApplication;
-  let viewerFactory: ViewerFactory;
+  let userFactory: UserFactory;
   let eventFactory: EventFactory;
   let attachmentFactory: AttachmentFactory;
   let eventAttachmentFactory: EventAttachmentFactory;
@@ -23,7 +23,7 @@ describe("Prisma Event Repository (E2E)", () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule, CacheModule],
       providers: [
-        ViewerFactory,
+        UserFactory,
         EventFactory,
         AttachmentFactory,
         EventAttachmentFactory,
@@ -32,7 +32,7 @@ describe("Prisma Event Repository (E2E)", () => {
 
     app = moduleRef.createNestApplication();
 
-    viewerFactory = moduleRef.get(ViewerFactory);
+    userFactory = moduleRef.get(UserFactory);
     eventFactory = moduleRef.get(EventFactory);
     attachmentFactory = moduleRef.get(AttachmentFactory);
     eventAttachmentFactory = moduleRef.get(EventAttachmentFactory);
@@ -43,7 +43,7 @@ describe("Prisma Event Repository (E2E)", () => {
   });
 
   it("should cache event details", async () => {
-    const user = await viewerFactory.makePrismaViewer();
+    const user = await userFactory.makePrismaUser();
 
     const event = await eventFactory.makePrismaEvent({
       authorId: user.id,
@@ -74,7 +74,7 @@ describe("Prisma Event Repository (E2E)", () => {
   });
 
   it("should return cached event details on subsequent calls", async () => {
-    const user = await viewerFactory.makePrismaViewer();
+    const user = await userFactory.makePrismaUser();
 
     const event = await eventFactory.makePrismaEvent({
       authorId: user.id,
@@ -113,7 +113,7 @@ describe("Prisma Event Repository (E2E)", () => {
   });
 
   it("should reset event details cache when saving the event", async () => {
-    const user = await viewerFactory.makePrismaViewer();
+    const user = await userFactory.makePrismaUser();
 
     const event = await eventFactory.makePrismaEvent({
       authorId: user.id,

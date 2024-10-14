@@ -6,12 +6,12 @@ import { InMemoryEventsRepository } from "test/repositories/in-memory-event-repo
 import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 import { makeAttachment } from "test/factories/make-attachment";
 import { makeEventAttachment } from "test/factories/make-event-attachment";
-import { InMemoryViewersRepository } from "test/repositories/in-memory-viewer-repository";
-import { makeViewer } from "test/factories/make-viewer";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-user-repository";
+import { makeUser } from "test/factories/make-user";
 
 let inMemoryEventAttachmentsRepository: InMemoryEventAttachmentsRepository;
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
-let inMemoryViewersRepository: InMemoryViewersRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryEventsRepository: InMemoryEventsRepository;
 let sut: GetEventBySlugUseCase;
 
@@ -20,22 +20,22 @@ describe("Get Event By Slug", () => {
     inMemoryEventAttachmentsRepository =
       new InMemoryEventAttachmentsRepository();
     inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
-    inMemoryViewersRepository = new InMemoryViewersRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
     inMemoryEventsRepository = new InMemoryEventsRepository(
       inMemoryEventAttachmentsRepository,
       inMemoryAttachmentsRepository,
-      inMemoryViewersRepository
+      inMemoryUsersRepository
     );
     sut = new GetEventBySlugUseCase(inMemoryEventsRepository);
   });
 
   it("should be able to get a event by slug", async () => {
-    const viewer = makeViewer({ name: "John Doe" });
+    const user = makeUser({ name: "John Doe" });
 
-    inMemoryViewersRepository.items.push(viewer);
+    inMemoryUsersRepository.items.push(user);
 
     const newEvent = makeEvent({
-      authorId: viewer.id,
+      authorId: user.id,
       slug: Slug.create("example-event"),
     });
 

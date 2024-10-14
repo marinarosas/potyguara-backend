@@ -8,11 +8,11 @@ import request from "supertest";
 import { AttachmentFactory } from "test/factories/make-attachment";
 import { EventFactory } from "test/factories/make-event";
 import { EventAttachmentFactory } from "test/factories/make-event-attachment";
-import { ViewerFactory } from "test/factories/make-viewer";
+import { UserFactory } from "test/factories/make-user";
 
 describe("Get event by slug (E2E)", () => {
   let app: INestApplication;
-  let viewerFactory: ViewerFactory;
+  let userFactory: UserFactory;
   let eventFactory: EventFactory;
   let attachmentFactory: AttachmentFactory;
   let eventAttachmentFactory: EventAttachmentFactory;
@@ -22,7 +22,7 @@ describe("Get event by slug (E2E)", () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
       providers: [
-        ViewerFactory,
+        UserFactory,
         EventFactory,
         AttachmentFactory,
         EventAttachmentFactory,
@@ -31,7 +31,7 @@ describe("Get event by slug (E2E)", () => {
 
     app = moduleRef.createNestApplication();
 
-    viewerFactory = moduleRef.get(ViewerFactory);
+    userFactory = moduleRef.get(UserFactory);
     eventFactory = moduleRef.get(EventFactory);
     attachmentFactory = moduleRef.get(AttachmentFactory);
     eventAttachmentFactory = moduleRef.get(EventAttachmentFactory);
@@ -41,7 +41,7 @@ describe("Get event by slug (E2E)", () => {
   });
 
   test("[GET] /events/:slug", async () => {
-    const user = await viewerFactory.makePrismaViewer({
+    const user = await userFactory.makePrismaUser({
       name: "John Doe",
     });
 

@@ -1,20 +1,20 @@
-import { InMemoryViewersRepository } from "test/repositories/in-memory-viewer-repository";
-import { RegisterViewerUseCase } from "./register-viewer";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-user-repository";
 import { FakeHasher } from "test/cryptography/fake-hasher";
+import { RegisterUserUseCase } from "./register-user";
 
-let inMemoryViewersRepository: InMemoryViewersRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let fakeHasher: FakeHasher;
 
-let sut: RegisterViewerUseCase;
+let sut: RegisterUserUseCase;
 
-describe("Register Viewer", () => {
+describe("Register User", () => {
   beforeEach(() => {
-    inMemoryViewersRepository = new InMemoryViewersRepository();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
     fakeHasher = new FakeHasher();
-    sut = new RegisterViewerUseCase(inMemoryViewersRepository, fakeHasher);
+    sut = new RegisterUserUseCase(inMemoryUsersRepository, fakeHasher);
   });
 
-  it("should be able to register a new viewer", async () => {
+  it("should be able to register a new user", async () => {
     const result = await sut.execute({
       name: "John Doe",
       username: "johndoe",
@@ -25,11 +25,11 @@ describe("Register Viewer", () => {
 
     expect(result.isRight()).toBe(true);
     expect(result.value).toEqual({
-      viewer: inMemoryViewersRepository.items[0],
+      user: inMemoryUsersRepository.items[0],
     });
   });
 
-  it("should hash viewer password upon registration", async () => {
+  it("should hash user password upon registration", async () => {
     const result = await sut.execute({
       name: "John Doe",
       username: "johndoe",
@@ -41,6 +41,6 @@ describe("Register Viewer", () => {
     const hashedPassword = await fakeHasher.hash("123456");
 
     expect(result.isRight()).toBe(true);
-    expect(inMemoryViewersRepository.items[0].password).toEqual(hashedPassword);
+    expect(inMemoryUsersRepository.items[0].password).toEqual(hashedPassword);
   });
 });

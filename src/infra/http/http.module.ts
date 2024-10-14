@@ -7,8 +7,8 @@ import { ProfileController } from "./controllers/user-profile.controller";
 import { DatabaseModule } from "../database/database.module";
 import { CreateEventUseCase } from "@/domain/forum/application/use-cases/create-event";
 import { FetchRecentEventsUseCase } from "@/domain/forum/application/use-cases/fetch-recent-events";
-import { RegisterViewerUseCase } from "@/domain/forum/application/use-cases/register-viewer";
-import { AuthenticateViewerUseCase } from "@/domain/forum/application/use-cases/authenticate.viewer";
+import { RegisterUserUseCase } from "@/domain/forum/application/use-cases/register-user";
+import { AuthenticateUserUseCase } from "@/domain/forum/application/use-cases/authenticate.user";
 import { CryptographyModule } from "../cryptography/cryptography.module";
 import { GetEventBySlugController } from "./controllers/get-event-by-slug.controller";
 import { GetEventBySlugUseCase } from "@/domain/forum/application/use-cases/get-event-by-slug";
@@ -43,8 +43,8 @@ import { FetchEventsByAuthorIdUseCase } from "@/domain/forum/application/use-cas
     CreateEventUseCase,
     FetchRecentEventsUseCase,
     FetchEventsByAuthorIdUseCase,
-    RegisterViewerUseCase,
-    AuthenticateViewerUseCase,
+    RegisterUserUseCase,
+    AuthenticateUserUseCase,
     GetEventBySlugUseCase,
     EditEventUseCase,
     DeleteEventUseCase,
