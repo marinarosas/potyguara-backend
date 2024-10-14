@@ -1,35 +1,25 @@
-import { InMemoryAddressRepository } from "test/repositories/in-memory-address-repository";
-import { CreateAddressUseCase } from "./create-address";
+import { InMemoryCartRepository } from "test/repositories/in-memory-cart-repository";
+import { CreateCartUseCase } from "./create-cart";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 
-let inMemoryAddressRepository: InMemoryAddressRepository;
+let inMemoryCartRepository: InMemoryCartRepository;
 
-let sut: CreateAddressUseCase;
+let sut: CreateCartUseCase;
 
-describe("Create Address", () => {
+describe("Create Cart", () => {
   beforeEach(() => {
-    inMemoryAddressRepository = new InMemoryAddressRepository();
-    sut = new CreateAddressUseCase(inMemoryAddressRepository);
+    inMemoryCartRepository = new InMemoryCartRepository();
+    sut = new CreateCartUseCase(inMemoryCartRepository);
   });
 
-  it("should be able to create an address", async () => {
+  it("should be able to create an cart", async () => {
     const result = await sut.execute({
-      addressLine: "Rua Em Algum Lugar",
-      buildingNumber: "14A",
-      complement: "Casa 7",
-      referencePoint: "Perto do Posto",
-      neighborhood: "Bairro",
-      city: "Cidade",
-      state: "Estado",
-      zipCode: "59000-999",
-      country: "Brasil",
-      description: "Descrição 1",
-      isEnabled: true,
       userId: "1",
+      cartProducts: [],
     });
 
     expect(result.isRight()).toBe(true);
-    expect(inMemoryAddressRepository.items[0]).toEqual(result.value?.address);
-    expect(inMemoryAddressRepository.items[0].userId).toEqual(new UniqueEntityID("1"));
+    expect(inMemoryCartRepository.items[0]).toEqual(result.value?.cart);
+    expect(inMemoryCartRepository.items[0].userId).toEqual(new UniqueEntityID("1"));
   });
 });

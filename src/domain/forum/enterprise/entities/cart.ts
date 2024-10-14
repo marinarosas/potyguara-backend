@@ -2,13 +2,14 @@ import { Entity } from "@/core/entities/entity";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { User } from "./user";
 import { CartProductsProps } from "./cart-products";
+import { Optional } from "@/core/types/optional";
 
 export interface CartProps {
-  user: User;
+  user?: User;
   userId: UniqueEntityID;
   cartProducts: CartProductsProps[];
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt?: Date;
 }
 
 export class Cart extends Entity<CartProps> {
@@ -32,8 +33,17 @@ export class Cart extends Entity<CartProps> {
     return this.props.updatedAt;
   }
 
-  static create(props: CartProps, id?: UniqueEntityID) {
-    const cart = new Cart(props, id);
+  static create(
+    props: Optional<CartProps, "createdAt">,
+    id?: UniqueEntityID
+  ) {
+    const cart = new Cart(
+      {
+        ...props,
+        createdAt: props.createdAt ?? new Date(),
+      },
+      id
+    );
 
     return cart;
   }

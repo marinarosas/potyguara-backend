@@ -2,14 +2,14 @@ import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 
-export interface CartProps {
+export interface DeliveryFeeProps {
     neighborhood: string
     fee: number
     createdAt: Date;
     updatedAt: Date;
 }
 
-export class Cart extends Entity<CartProps> {
+export class DeliveryFee extends Entity<DeliveryFeeProps> {
   get neighborhood(){
     return this.props.neighborhood
   }
@@ -26,9 +26,9 @@ export class Cart extends Entity<CartProps> {
     return this.props.updatedAt;
   }
 
-  static create(props: CartProps, id?: UniqueEntityID) {
-    const cart = new Cart(props, id)
+  static create(props: DeliveryFeeProps, id?: UniqueEntityID) {
+    const deliveryfee = new DeliveryFee(props, id)
 
-    return cart
+    return deliveryfee
   }
 }
